@@ -21,83 +21,132 @@ import os
 HEIGHT = 600
 WIDTH = 600
 N = 5
+CONFIGURATION_COURANTE = [['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#']]
+
+SAUVEGARDES = []
+SAUVEGARDE_TMP = []
+
+INTERRUPTION = False
+
+TEMPS_ATTENTE = 1000
 
 ########################
 
 # fonctions
 
-def initialisation():
-    grid = []
-    
+def init_terrain():
+    grille = []
     for i in range(N-2):
-        grid.append(["#"])
+        grille.append(['#'])
         for j in range(N-2):
-            grid[i].append(0)
-        grid[i].append("#")
-    grid.insert(0, ["#"]*N)
-    grid.append(["#"]*N)
+            grille[i].append(0)
+        grille[i].append('#')
+    grille.insert(0, ['#'] * N)
+    grille.append(['#'] * N)
+    return init_affichage(grille)
 
-    return affichage(grid)
-
-def affichage(grid):
+def init_affichage(grid):
     for i in range(len(grid)):
         for j in range(len(grid[i])):
             canvas.create_text(50, 50, text = str(grid[i][j]))
 
-def Initialisation_bouton():
-    pass
+def init_aleatoire():
+    global SAUVEGARDE_TMP
+    grille = []
+    for i in range(N-2):
+        grille.append(['#'])
+        for j in range(N-2):
+            grille[i].append(rd.randint(0, 6))
+        grille[i].append('#')
+    grille.insert(0, ['#'] * N)
+    grille.append(['#'] * N)
+    SAUVEGARDE_TMP = grille
+    return init_affichage(grille)
 
-def Aleatoire_bouton():
-    pass
 
-def Sauvegarder_bouton():
-    pass
-
-def Charge_bouton():
-    pass
-
-def Additionner_bouton():
-    pass
-
-def Soustraire_bouton():
-    pass
-
-def Stabiliser_bouton():
-    pass
-
-def Interrompre_bouton():
-    if Interrompre == True:
-        pass
-    else:
-        os.system("pause")
+def sauvegarder_config():
+    global SAUVEGARDES, SAUVEGARDE_TMP
+    SAUVEGARDES.append(SAUVEGARDE_TMP)
     return
 
-def Reprendre_bouton():
+def charger_config():
+    global SAUVEGARDES, SAUVEGARDE_TMP
+    num = int(input("Entrez le numéro de la sauvegarde à charger"))
+    SAUVEGARDE_TMP = SAUVEGARDES[num]
+    return init_affichage(SAUVEGARDE_TMP)
+
+def addition():
     pass
+
+def soustraction():
+    pass
+
+def stabilisation():
+    pass
+
+def interruption():
+    global INTERRUPTION
+    INTERRUPTION = True
+
+def reprendre():
+    global INTERRUPTION
+    INTERRUPTION = False
+    stabilisation()
 
 # fonctions presets
 
-def Random_bouton():
+def preset_random():
+    global SAUVEGARDE_TMP
+    grille = []
+    for i in range(N-2):
+        grille.append(['#'])
+        for j in range(N-2):
+            grille[i].append(rd.randint(0, 3))
+        grille[i].append('#')
+    grille.insert(0, ['#'] * N)
+    grille.append(['#'] * N)
+    SAUVEGARDE_TMP = grille
+    return init_affichage(grille)
+
+def preset_pilecentree():
     pass
 
-def Pile_centree_bouton():
+def preset_maxstable():
+    global SAUVEGARDE_TMP
+    grille = []
+    for i in range(N-2):
+        grille.append(['#'])
+        for j in range(N-2):
+            grille[i].append(3)
+        grille[i].append('#')
+    grille.insert(0, ['#'] * N)
+    grille.append(['#'] * N)
+    SAUVEGARDE_TMP = grille
+    return init_affichage(grille)
+
+def preset_doublemaxstable():
+    global SAUVEGARDE_TMP
+    grille = []
+    for i in range(N-2):
+        grille.append(['#'])
+        for j in range(N-2):
+            grille[i].append(6)
+        grille[i].append('#')
+    grille.insert(0, ['#'] * N)
+    grille.append(['#'] * N)
+    SAUVEGARDE_TMP = grille
+    return init_affichage(grille)
+
+def preset_identity():
     pass
 
-def Max_stable_bouton():
+def edition_taille():
     pass
 
-def Double_max_stable_bouton():
-    pass
-
-def Indentify_bouton():
-    pass
-
-# bouton pour aller plus loin faits par Manel
-
-def Edition_bouton():
-    pass
-
-def Taille_bouton():
+def edition_temps():
     pass
 
 
@@ -114,53 +163,53 @@ canvas.grid(column = 0, row = 0)
 Initialisation = tk.Button(root, text="Initialisation", fg="black", command= Initialisation_bouton)
 Initialisation.grid(column=1, row=0)
 
-Aleatoire = tk.Button(root, text="Aleatoire", fg="black", command= Aleatoire_bouton)
+Aleatoire = tk.Button(root, text="Aleatoire", fg="black", command=init_aleatoire)
 Aleatoire.grid(column=1, row=0)
 
-Sauvegarder = tk.Button(root, text="Sauvergarder", fg="black", command= Sauvegarder_bouton)
+Sauvegarder = tk.Button(root, text="Sauvergarder", fg="black", command=sauvegarder_config)
 Sauvegarder.grid(column=1, row=0)
 
-Charge = tk.Button(root, text="Charge", fg="black", command= Charge_bouton)
+Charge = tk.Button(root, text="Charge", fg="black", command=charger_config)
 Charge.grid(column=1, row=0)
 
-Additionner = tk.Button(root, text="Additionner", fg="black", command= Additionner_bouton)
+Additionner = tk.Button(root, text="Additionner", fg="black", command=addition)
 Additionner.grid(column=1, row=0)
 
-Soustraire = tk.Button(root, text="Soustraire", fg="black", command= Soustraire_bouton)
+Soustraire = tk.Button(root, text="Soustraire", fg="black", command=soustraction)
 Soustraire.grid(column=1, row=0)
 
-Stabiliser = tk.Button(root, text="Stabiliser", fg="black", command= Stabiliser_bouton)
+Stabiliser = tk.Button(root, text="Stabiliser", fg="black", command=stabilisation)
 Stabiliser.grid(column=1, row=0)
 
-Interrompre = tk.Button(root, text="Interrompre", fg="black", command= Interrompre_bouton)
+Interrompre = tk.Button(root, text="Interrompre", fg="black", command=interruption)
 Interrompre.grid(column=1, row=0)
 
-Reprendre = tk.Button(root, text="Reprendre", fg="black", command= Reprendre_bouton)
+Reprendre = tk.Button(root, text="Reprendre", fg="black", command=reprendre)
 Reprendre.grid(column=1, row=0)
 
 # boutons presets 
 
-Random = tk.Button(root, text="Random", fg="black", command= Random_bouton)
+Random = tk.Button(root, text="Random", fg="black", command=preset_random)
 Random.grid(column = 1, row = 1)
 
-Pile_centree = tk.Button(root, text="pile centrée", fg="black", command= Pile_centree_bouton)
+Pile_centree = tk.Button(root, text="pile centrée", fg="black", command=preset_pilecentree)
 Pile_centree.grid(column = 1, row = 1)
 
-Max_stable = tk.Button(root, text="Max stable", fg="black", command= Max_stable_bouton)
+Max_stable = tk.Button(root, text="Max stable", fg="black", command=preset_maxstable)
 Max_stable.grid(column = 1, row = 1)
 
-Double_max_stable = tk.Button(root, text="Double max stable", fg="black", command= Double_max_stable_bouton)
+Double_max_stable = tk.Button(root, text="Double max stable", fg="black", command=preset_doublemaxstable)
 Double_max_stable.grid(column = 1, row = 1)
 
-Identify = tk.Button(root, text="Identity", fg="black", command= Indentify_bouton)
+Identify = tk.Button(root, text="Identity", fg="black", command=preset_identity)
 Identify.grid(column = 1, row = 1)
 
 # boutons édition
 
-Edition= tk.Button(root, text="Edition", fg="red", command=Edition_bouton)
+Edition= tk.Button(root, text="Edition", fg="red", command=edition_taille)
 Edition.grid(column=1, row=0)
 
-Taille= tk.Button(root, text="Taille", fg="red", command=Taille_bouton)
+Taille= tk.Button(root, text="Taille", fg="red", command=edition_temps)
 Taille.grid(column=1, row=0)
 
 

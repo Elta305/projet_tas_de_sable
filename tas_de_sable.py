@@ -215,3 +215,29 @@ Taille.grid(column=1, row=0)
 
 initialisation()
 root.mainloop()
+
+#la docstring
+
+def init_terrain():
+  « " » -> func
+      Renvoie la fonction init_affichage avec une grille remplie de 0 en
+      paramètres.
+  """
+    grille = []
+ pour i dans la plage (N-2):
+ calandre. append(['#'])
+ pour j dans la plage (N-2):
+ grille[i]. ajouter(0)
+ grille[i]. append('#')
+ calandre. insert(0, ['#'] * N)
+ calandre. append(['#'] * N)
+ init_affichage de retour (grille)
+
+def affichage(grille):
+    « " » liste -> func
+    Affiche une interface tkinter avec les valeur du tableau grid
+      """
+
+ pour i dans range(len(grid)):
+ pour j dans range(len(grid[i])):
+ toile. create_text(50, 50, text = str(grid[i][j]))

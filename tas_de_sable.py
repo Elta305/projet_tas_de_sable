@@ -95,16 +95,6 @@ def reprendre():
     global INTERRUPTION
     INTERRUPTION = False
     stabilisation()
-    
-def edition_taille():
-    global N
-    N = int(input("Choisissez une nouvelle taille de tableau"))
-    return init_terrain()
-
-def edition_temps():
-    global TEMPS_ATTENTE
-    TEMPS_ATTENTE = int(input("Choisissez le temps d'attente entre chaque stabilisation en millisecondes"))
-    return TEMPS_ATTENTE
 
 # fonctions presets
 
@@ -152,12 +142,16 @@ def preset_doublemaxstable():
 
 def preset_identity():
     pass
-
+    
 def edition_taille():
-    pass
+    global N
+    N = int(input("Choisissez une nouvelle taille de tableau"))
+    return init_terrain()
 
 def edition_temps():
-    pass
+    global TEMPS_ATTENTE
+    TEMPS_ATTENTE = int(input("Choisissez le temps d'attente entre chaque stabilisation en millisecondes"))
+    return TEMPS_ATTENTE
 
 
 ########################
@@ -225,31 +219,3 @@ Taille.grid(column=1, row=0)
 
 initialisation()
 root.mainloop()
-
-#la docstring
-
-def init_terrain():
-  « " » -> func
-      Renvoie la fonction init_affichage avec une grille remplie de 0 en
-      paramètres.
-  """
-    grille = []
- pour i dans la plage (N-2):
- calandre. append(['#'])
- pour j dans la plage (N-2):
- grille[i]. ajouter(0)
- grille[i]. append('#')
- calandre. insert(0, ['#'] * N)
- calandre. append(['#'] * N)
- init_affichage de retour (grille)
-
-def affichage(grille):
-    « " » liste -> func
-    Affiche une interface tkinter avec les valeur du tableau grid
-      """
-
- pour i dans range(len(grid)):
- pour j dans range(len(grid[i])):
- toile. create_text(50, 50, text = str(grid[i][j]))
-
-

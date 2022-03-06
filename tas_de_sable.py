@@ -95,6 +95,16 @@ def reprendre():
     global INTERRUPTION
     INTERRUPTION = False
     stabilisation()
+    
+def edition_taille():
+    global N
+    N = int(input("Choisissez une nouvelle taille de tableau"))
+    return init_terrain()
+
+def edition_temps():
+    global TEMPS_ATTENTE
+    TEMPS_ATTENTE = int(input("Choisissez le temps d'attente entre chaque stabilisation en millisecondes"))
+    return TEMPS_ATTENTE
 
 # fonctions presets
 
@@ -241,3 +251,5 @@ def affichage(grille):
  pour i dans range(len(grid)):
  pour j dans range(len(grid[i])):
  toile. create_text(50, 50, text = str(grid[i][j]))
+
+

@@ -85,7 +85,21 @@ def soustraction():
     pass
 
 def stabilisation():
-    pass
+    list=[]
+    for i in range(N+2): 
+        list.append([])
+        for j in range(N+2):
+            if i==0 :
+                list[i].append('#')
+            elif j==0:
+                list[i].append('#')
+            elif i==N+1:
+                list[i].append('#')
+            elif j==N+1:
+                list[i].append('#')
+            else:
+                list[i].append(0)
+    return(list)
 
 def interruption():
     global INTERRUPTION

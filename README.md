@@ -20,8 +20,8 @@ Charger: Charge une sauvegarde. Entrez 0 dans le terminal pour charger la derni�
 Addition: Additionne la configuration courante avec la configuration sauvegardée choisie dans le terminal.  
 Soustraction: Soustractionne la configuration courante avec la configuration sauvegardée choisie dans le terminal.  
 Stabilisation: Lance la stabilisation du tas de sable.  
-Interrompre: Interompt la stabilisation.  
-Reprendre: Remprend la stabilisation.  
+Interrompre: Interrompt la stabilisation. Si activé, la stabilisation se fait étape par étape, cliquez sur le bouton reprendre pour que la stabilisation se fasse de nouveau de manière inintérrompue.  
+Reprendre: Reprend la stabilisation.  
 
 La colonne Presets, à droite du canvas, sont des presets.  
 

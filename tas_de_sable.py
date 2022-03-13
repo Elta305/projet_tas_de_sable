@@ -416,12 +416,16 @@ def preset_embleme():
     
 def edition_taille():
     global N
-    N = int(input("Choisissez une nouvelle taille de tableau"))
+    tmp = N
+    N = int(input("Choisissez une nouvelle taille de tableau: "))
+    if N <= 3:
+        N = tmp
+        return print("Vous ne pouvez pas créer de matrice aussi petites !")
     return init_terrain()
 
 def edition_temps():
     global TEMPS_ATTENTE
-    TEMPS_ATTENTE = int(input("Choisissez le temps d'attente entre chaque stabilisation en millisecondes"))
+    TEMPS_ATTENTE = int(input("Choisissez le temps d'attente entre chaque stabilisation en millisecondes: "))
     return TEMPS_ATTENTE
 
 def propagation4():

@@ -35,7 +35,7 @@ Emblème: Un preset original crée pour l'occasion :
 
 La colonne Edition, tout à droite, permet de modifier certains paramètres.  
 
-Taille: Change la taille de la configuration avec le nombre donneé dans le terminal.  
+Taille: Change la taille de la configuration avec le nombre donné dans le terminal. Lorsque la taille est de 50 ou plus, les nombres affichés disparaissent pour permettre une meilleure visibilité.  
 Temps: Change le temps entre chaque étapes de la stabilisation (temps en millisecondes).  
 Propagation4: Change la propagation aux 4 cases adjacentes (par défaut).
 Propagation8: Change la propagation aux 8 cases adjacentes. Si activée, la fonction Aléatoire initialisera la configuration avec des nombres aléatoires entre 0 et 10.  

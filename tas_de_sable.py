@@ -7,37 +7,36 @@
 # https://github.com/uvsq-info/l1-python
 ########################
 
-# import des librairies
+# Import des librairies
 
 import tkinter as tk
 import random as rd
-import os
 
 
 ########################
 
-# constantes
+# Variables globales
 
-HEIGHT = 600
-WIDTH = 600
-N = 5
-CONFIGURATION_COURANTE = [['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 
-0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 
-0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 
-0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '#'], ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#']]
+HAUTEUR = 800
+LARGEUR = 800
+N = 15
 
 SAUVEGARDES = []
 SAUVEGARDE_TMP = []
 
+TEMPS_ATTENTE = 100
+PROPAGATION = 4
 INTERRUPTION = False
-
-TEMPS_ATTENTE = 1000
 
 ########################
 
-# fonctions
+# Fonctions
 
 def init_terrain():
+    """ -> func
+        Renvoie la fonction init_affichage avec une matrice remplie de 0 en paramètres
+    """
+    global SAUVEGARDE_TMP
     grille = []
     for i in range(N-2):
         grille.append(['#'])
@@ -46,60 +45,149 @@ def init_terrain():
         grille[i].append('#')
     grille.insert(0, ['#'] * N)
     grille.append(['#'] * N)
+    SAUVEGARDE_TMP = grille
     return init_affichage(grille)
 
-def init_affichage(grid):
-    for i in range(len(grid)):
-        for j in range(len(grid[i])):
-            canvas.create_text(50, 50, text = str(grid[i][j]))
-
 def init_aleatoire():
-    global SAUVEGARDE_TMP
+    global SAUVEGARDE_TMP, PROPAGATION
     grille = []
+    nb = 6
+    if PROPAGATION == 8:
+        nb = 10
     for i in range(N-2):
         grille.append(['#'])
         for j in range(N-2):
-            grille[i].append(rd.randint(0, 6))
+            grille[i].append(rd.randint(0, nb))
         grille[i].append('#')
     grille.insert(0, ['#'] * N)
     grille.append(['#'] * N)
     SAUVEGARDE_TMP = grille
     return init_affichage(grille)
 
+def init_affichage(grille):
+    couleurs = ["green yellow", "green3", "green", "yellow", "goldenrod1", "orange2", "chocolate1", "red", "red3", "purple3"]
+
+    global HAUTEUR, LARGEUR, N
+    hauteur_case = HAUTEUR // N
+    largeur_case = LARGEUR // N
+    color = "gray"
+
+    for i in range(len(grille)):
+        for j in range(len(grille[i])):
+
+            if grille[i][j] == "#":
+                color = "gray"
+            elif grille[i][j] <= 9:
+                color = couleurs[grille[i][j]]
+            else:
+                color = couleurs[9]
+
+            canvas.create_rectangle((j*largeur_case), (i*hauteur_case), (j*largeur_case+largeur_case), (i*hauteur_case+hauteur_case), fill=color)
+            if N < 50:
+                canvas.create_text(((j*largeur_case) + (largeur_case//2)), ((i*hauteur_case) + (hauteur_case // 2)), text=str(grille[i][j]))
 
 def sauvegarder_config():
     global SAUVEGARDES, SAUVEGARDE_TMP
     SAUVEGARDES.append(SAUVEGARDE_TMP)
-    return
 
 def charger_config():
     global SAUVEGARDES, SAUVEGARDE_TMP
     num = int(input("Entrez le numéro de la sauvegarde à charger"))
+    if len(SAUVEGARDES) < num:
+        return print("Configuration inexistante !")
     SAUVEGARDE_TMP = SAUVEGARDES[num]
-    return init_affichage(SAUVEGARDE_TMP)
+    return init_affichage(SAUVEGARDES[num])
 
 def addition():
-    pass
+    global SAUVEGARDES, SAUVEGARDE_TMP
+    num = int(input("Entrez le numéro de la sauvegarde à additionner avec cette configuration"))
+    if len(SAUVEGARDES) < num:
+        return print("Configuration inexistante !")
+    tab1 = SAUVEGARDE_TMP[1:-1]
+    tab2 = SAUVEGARDES[num][1:-1]
+
+    for i in range(len(tab1)):
+        for j in range(len(tab1[i])):
+            if isinstance(tab1[i][j], int):
+                tab1[i][j] += tab2[i][j]
+    
+    tab1.insert(0, ['#'] * N)
+    tab1.append(['#'] * N)
+    SAUVEGARDE_TMP = tab1
+    return init_affichage(tab1)
 
 def soustraction():
-    pass
+    global SAUVEGARDES, SAUVEGARDE_TMP
+    num = int(input("Entrez le numéro de la sauvegarde à soustraire avec cette configuration"))
+    if len(SAUVEGARDES) < num:
+        return print("Configuration inexistante !")
+    tab1 = SAUVEGARDE_TMP[1:-1]
+    tab2 = SAUVEGARDES[num][1:-1]
+    for i in range(len(tab1)):
+        for j in range(len(tab1[i])):
+            if isinstance(tab1[i][j], int):
+                tab1[i][j] -= tab2[i][j]
+                if tab1[i][j] < 0:
+                    tab1[i][j] = 0
+                
+    
+    tab1.insert(0, ['#'] * N)
+    tab1.append(['#'] * N)
+    SAUVEGARDE_TMP = tab1
+    return init_affichage(tab1)
 
 def stabilisation():
-    list=[]
-    for i in range(N+2): 
-        list.append([])
-        for j in range(N+2):
-            if i==0 :
-                list[i].append('#')
-            elif j==0:
-                list[i].append('#')
-            elif i==N+1:
-                list[i].append('#')
-            elif j==N+1:
-                list[i].append('#')
+    global SAUVEGARDE_TMP, INTERRUPTION, TEMPS_ATTENTE, PROPAGATION
+    tab = SAUVEGARDE_TMP
+    continuer = False
+    for i in range(len(tab)):
+        for j in range(len(tab[i])):
+            if isinstance(tab[i][j], int):
+                if PROPAGATION == 4:
+                    if tab[i][j] >= 4:
+                        if (isinstance(tab[i-1][j], int)):
+                            tab[i-1][j] += 1
+                        if (isinstance(tab[i+1][j], int)):
+                            tab[i+1][j] += 1
+                        if (isinstance(tab[i][j-1], int)):
+                            tab[i][j-1] += 1
+                        if (isinstance(tab[i][j+1], int)):
+                            tab[i][j+1] += 1
+                        tab[i][j] -= 4
+                else: 
+                    if tab[i][j] >= 8:
+                        if (isinstance(tab[i-1][j], int)):
+                            tab[i-1][j] += 1
+                        if (isinstance(tab[i+1][j], int)):
+                            tab[i+1][j] += 1
+                        if (isinstance(tab[i][j-1], int)):
+                            tab[i][j-1] += 1
+                        if (isinstance(tab[i][j+1], int)):
+                            tab[i][j+1] += 1
+                        if (isinstance(tab[i-1][j-1], int)):
+                            tab[i-1][j-1] += 1
+                        if (isinstance(tab[i+1][j+1], int)):
+                            tab[i+1][j+1] += 1
+                        if (isinstance(tab[i+1][j-1], int)):
+                            tab[i+1][j-1] += 1
+                        if (isinstance(tab[i+1][j+1], int)):
+                            tab[i+1][j+1] += 1
+                        tab[i][j] -= 8
+
+    init_affichage(tab)
+    tab2 = tab[1: -1]
+    for i in range(len(tab2)):
+        for j in range(len(tab2[i][1: -1])):
+            if PROPAGATION == 4:
+                if tab2[i][j+1] >= 4:
+                    continuer = True
             else:
-                list[i].append(0)
-    return(list)
+                if tab2[i][j+1] >= 8:
+                    continuer = True
+    if continuer is False:
+        return
+    if INTERRUPTION is False:
+        root.after(TEMPS_ATTENTE, stabilisation)
 
 def interruption():
     global INTERRUPTION
@@ -110,7 +198,7 @@ def reprendre():
     INTERRUPTION = False
     stabilisation()
 
-# fonctions presets
+# Presets
 
 def preset_random():
     global SAUVEGARDE_TMP
@@ -154,8 +242,177 @@ def preset_doublemaxstable():
     SAUVEGARDE_TMP = grille
     return init_affichage(grille)
 
+# Sous-fonctions des fonctions suivantes
+
+def doublemax():
+    grille = []
+    for i in range(N-2):
+        grille.append(['#'])
+        for j in range(N-2):
+            grille[i].append(6)
+        grille[i].append('#')
+    grille.insert(0, ['#'] * N)
+    grille.append(['#'] * N)
+    return grille
+
+def stab(tab):
+    for i in range(len(tab)):
+        for j in range(len(tab[i])):
+            if isinstance(tab[i][j], int):
+                if tab[i][j] >= 4:
+                    if (isinstance(tab[i-1][j], int)):
+                        tab[i-1][j] += 1
+                    if (isinstance(tab[i+1][j], int)):
+                        tab[i+1][j] += 1
+                    if (isinstance(tab[i][j-1], int)):
+                        tab[i][j-1] += 1
+                    if (isinstance(tab[i][j+1], int)):
+                        tab[i][j+1] += 1
+                    tab[i][j] -= 4
+
+def soustract(grille, grille2):
+    grille = grille[1:-1]
+    grille2 = grille2[1:-1]
+    for i in range(len(grille2)):
+        for j in range(len(grille2[i])):
+            if isinstance(grille2[i][j], int):
+                grille2[i][j] -= grille[i][j]
+                if grille2[i][j] < 0:
+                    grille2[i][j] = 0
+
+    grille2.insert(0, ['#'] * N)
+    grille2.append(['#'] * N)
+    return grille2
+
 def preset_identity():
-    pass
+    global SAUVEGARDE_TMP
+    
+    grille = doublemax()
+    tab = grille[1: -1]
+    for i in range(len(tab)):
+        for j in range(len(tab[i][1: -1])):
+            if tab[i][j+1] >= 4:
+                stab(grille)
+
+    grille2 = doublemax()            
+    tab2 = soustract(grille, grille2)
+    for i in range(len(tab)):
+        for j in range(len(tab[i][1: -1])):
+            if tab[i][j+1] >= 3:
+                stab(tab2)
+    SAUVEGARDE_TMP = tab2
+    return init_affichage(tab2)
+
+
+def preset_fleche():
+    global SAUVEGARDE_TMP
+    
+    grille = doublemax()
+    tab = grille[1: -1]
+    for i in range(len(tab)):
+        for j in range(len(tab[i][1: -1])):
+            if tab[i][j+1] >= 3:
+                stab(grille)
+
+    grille2 = doublemax()            
+    tab2 = soustract(grille, grille2)
+    for i in range(len(tab)):
+        for j in range(len(tab[i][1: -1])):
+            if tab[i][j+1] >= 4:
+                stab(tab2)
+    SAUVEGARDE_TMP = tab2
+    return init_affichage(tab2)
+
+def preset_circuit_integre():
+    global SAUVEGARDE_TMP
+    
+    grille = doublemax()
+    tab = grille[1: -1]
+    for i in range(len(tab)):
+        for j in range(len(tab[i][1: -1])):
+            if tab[i][j+1] >= 4:
+                stab(grille)
+
+    grille2 = doublemax()            
+    tab2 = soustract(grille, grille2)
+    for i in range(len(tab)):
+        for j in range(len(tab[i][1: -1])):
+            if tab[i][j+1] >= 4:
+                stab(tab2)
+    SAUVEGARDE_TMP = tab2
+    return init_affichage(tab2)
+
+def preset_megacorp():
+    global SAUVEGARDE_TMP
+    
+    grille = doublemax()
+    tab = grille[1: -1]
+    for i in range(len(tab)):
+        for j in range(len(tab[i][1: -1])):
+            if tab[i][j+1] >= 5:
+                stab(grille)
+
+    grille2 = doublemax()            
+    tab2 = soustract(grille, grille2)
+    for i in range(len(tab)):
+        for j in range(len(tab[i][1: -1])):
+            if tab[i][j+1] >= 5:
+                stab(tab2)
+    SAUVEGARDE_TMP = tab2
+    return init_affichage(tab2)
+
+def preset_bastion():
+    global SAUVEGARDE_TMP
+    
+    grille = doublemax()
+    tab = grille[1: -1]
+    for i in range(len(tab)):
+        for j in range(len(tab[i][1: -1])):
+            if tab[i][j+1] >= 4:
+                stab(grille)
+
+    grille2 = doublemax()            
+    tab2 = soustract(grille, grille2)
+    for i in range(len(tab)):
+        for j in range(len(tab[i][1: -1])):
+            if tab[i][j+1] >= 5:
+                stab(tab2)
+    SAUVEGARDE_TMP = tab2
+    return init_affichage(tab2)
+
+def preset_gemme():
+    global SAUVEGARDE_TMP
+    
+    grille = doublemax()
+    tab = grille[1: -1]
+    for i in range(len(tab)):
+        for j in range(len(tab[i][1: -1])):
+            if tab[i][j+1] >= 5:
+                stab(grille)
+
+    grille2 = doublemax()            
+    tab2 = soustract(grille, grille2)
+    stab(tab2)
+    SAUVEGARDE_TMP = tab2
+    return init_affichage(tab2)
+
+def preset_embleme():
+    global SAUVEGARDE_TMP
+    
+    grille = doublemax()
+    tab = grille[1: -1]
+    for i in range(len(tab)):
+        for j in range(len(tab[i][1: -1])):
+            if tab[i][j+1] >= 4:
+                stab(grille)
+
+    grille2 = doublemax()            
+    tab2 = soustract(grille, grille2)
+    stab(tab2)
+    SAUVEGARDE_TMP = tab2
+    return init_affichage(tab2)
+
+# Edition
     
 def edition_taille():
     global N
@@ -167,69 +424,90 @@ def edition_temps():
     TEMPS_ATTENTE = int(input("Choisissez le temps d'attente entre chaque stabilisation en millisecondes"))
     return TEMPS_ATTENTE
 
+def propagation4():
+    global PROPAGATION
+    PROPAGATION = 4
+
+def propagation8():
+    global PROPAGATION
+    PROPAGATION = 8
 
 ########################
 
-# affichage
-
+# Partie principale
 
 root = tk.Tk()
+root.title("Génération de terrain")
 
-canvas = tk.Canvas(root, height=500, width = 500)
-canvas.grid(column = 0, row = 0)
+canvas = tk.Canvas(root, height=HAUTEUR, width=LARGEUR)
+canvas.grid(column=1, row=0, rowspan=9)
 
-Initialisation = tk.Button(root, text="Initialisation", fg="black", command= Initialisation_bouton)
-Initialisation.grid(column=1, row=0)
+# Création des widgets
 
-Aleatoire = tk.Button(root, text="Aleatoire", fg="black", command=init_aleatoire)
-Aleatoire.grid(column=1, row=0)
+bouton_init = tk.Button(text="Initialisation", command=init_terrain)
+bouton_init.grid(column=0, row=0)
+bouton_aleatoire = tk.Button(text="Aléatoire", command=init_aleatoire)
+bouton_aleatoire.grid(column=0, row=1)
 
-Sauvegarder = tk.Button(root, text="Sauvergarder", fg="black", command=sauvegarder_config)
-Sauvegarder.grid(column=1, row=0)
+bouton_save = tk.Button(text="Sauvegarder", command=sauvegarder_config)
+bouton_save.grid(column=0, row=2)
+bouton_load = tk.Button(text="Charger", command=charger_config)
+bouton_load.grid(column=0, row=3)
 
-Charge = tk.Button(root, text="Charge", fg="black", command=charger_config)
-Charge.grid(column=1, row=0)
+bouton_add = tk.Button(text="Additionner", command=addition)
+bouton_add.grid(column=0, row=4)
+bouton_sub = tk.Button(text="Soustraire", command=soustraction)
+bouton_sub.grid(column=0, row=5)
 
-Additionner = tk.Button(root, text="Additionner", fg="black", command=addition)
-Additionner.grid(column=1, row=0)
+bouton_stab = tk.Button(text="Stabiliser", command=stabilisation)
+bouton_stab.grid(column=0, row=6)
+bouton_int = tk.Button(text="Interrompre", command=interruption)
+bouton_int.grid(column=0, row=7)
+bouton_rep = tk.Button(text="Reprendre", command=reprendre)
+bouton_rep.grid(column=0, row=8)
 
-Soustraire = tk.Button(root, text="Soustraire", fg="black", command=soustraction)
-Soustraire.grid(column=1, row=0)
+# Presets
 
-Stabiliser = tk.Button(root, text="Stabiliser", fg="black", command=stabilisation)
-Stabiliser.grid(column=1, row=0)
+preset = tk.Label(text='Presets')
+preset.grid(column=2, row=0)
 
-Interrompre = tk.Button(root, text="Interrompre", fg="black", command=interruption)
-Interrompre.grid(column=1, row=0)
+bouton_preset_rdm = tk.Button(text="Random", command=preset_random)
+bouton_preset_rdm.grid(column=2, row=1)
+bouton_preset_pilecentree = tk.Button(text="Pile Centrée", command=preset_pilecentree)
+bouton_preset_pilecentree.grid(column=2, row=2)
+bouton_preset_maxstable = tk.Button(text="Max Stable", command=preset_maxstable)
+bouton_preset_maxstable.grid(column=2, row=3)
+bouton_preset_doublemaxstable = tk.Button(text="Double Max Stable", command=preset_doublemaxstable)
+bouton_preset_doublemaxstable.grid(column=2, row=4)
+bouton_preset_identity = tk.Button(text="Identity", command=preset_identity)
+bouton_preset_identity.grid(column=2, row=5)
+bouton_preset_fleche = tk.Button(text="Flèche", command=preset_fleche)
+bouton_preset_fleche.grid(column=2, row=6)
+bouton_preset_circuit_integre = tk.Button(text="Circuit Intégré", command=preset_circuit_integre)
+bouton_preset_circuit_integre.grid(column=2, row=7)
+bouton_preset_megacorp = tk.Button(text="Megacorp", command=preset_megacorp)
+bouton_preset_megacorp.grid(column=2, row=8)
 
-Reprendre = tk.Button(root, text="Reprendre", fg="black", command=reprendre)
-Reprendre.grid(column=1, row=0)
+bouton_preset_bastion = tk.Button(text="Bastion", command=preset_bastion)
+bouton_preset_bastion.grid(column=3, row=6)
+bouton_preset_gemme = tk.Button(text="Gemme", command=preset_gemme)
+bouton_preset_gemme.grid(column=3, row=7)
+bouton_preset_embleme = tk.Button(text="Emblème", command=preset_embleme)
+bouton_preset_embleme.grid(column=3, row=8)
 
-# boutons presets 
+# Edition
 
-Random = tk.Button(root, text="Random", fg="black", command=preset_random)
-Random.grid(column = 1, row = 1)
+edition = tk.Label(text='Edition')
+edition.grid(column=4, row=0)
 
-Pile_centree = tk.Button(root, text="pile centrée", fg="black", command=preset_pilecentree)
-Pile_centree.grid(column = 1, row = 1)
+bouton_edition_taille = tk.Button(text="Taille", command=edition_taille)
+bouton_edition_taille.grid(column=4, row=1)
+bouton_edition_temps = tk.Button(text="Temps", command=edition_temps)
+bouton_edition_temps.grid(column=4, row=2)
+bouton_edition_propagation4 = tk.Button(text="Propagation 4", command=propagation4)
+bouton_edition_propagation4.grid(column=4, row=3)
+bouton_edition_propagation8 = tk.Button(text="Propagation 8", command=propagation8)
+bouton_edition_propagation8.grid(column=4, row=4)
 
-Max_stable = tk.Button(root, text="Max stable", fg="black", command=preset_maxstable)
-Max_stable.grid(column = 1, row = 1)
-
-Double_max_stable = tk.Button(root, text="Double max stable", fg="black", command=preset_doublemaxstable)
-Double_max_stable.grid(column = 1, row = 1)
-
-Identify = tk.Button(root, text="Identity", fg="black", command=preset_identity)
-Identify.grid(column = 1, row = 1)
-
-# boutons édition
-
-Edition= tk.Button(root, text="Edition", fg="red", command=edition_taille)
-Edition.grid(column=1, row=0)
-
-Taille= tk.Button(root, text="Taille", fg="red", command=edition_temps)
-Taille.grid(column=1, row=0)
-
-
-initialisation()
+init_terrain()
 root.mainloop()

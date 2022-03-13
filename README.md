@@ -30,6 +30,8 @@ Pile Centrée: Initialise la configuration avec uniquement des 0 et un nombre ch
 Max Stable: Initialise la configuration avec uniquement des 3.  
 Double Max Stable: Initialise la configuration avec uniquement des 6.  
 Identity: Initialise la configuration avec le preset Identity (Prend un peu de temps à charger selon la taille de la configuration).  
+Flèche: Un preset original crée pour l'occasion.
+Gemme: Un preset original crée pour l'occasion.
 Emblème: Un preset original crée pour l'occasion :
 ![Emblème](https://media.discordapp.net/attachments/941701899760046170/952368739033157632/Capture_decran_2022-03-13_014737.png?width=1199&height=1207)
 

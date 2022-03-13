@@ -26,7 +26,7 @@ Reprendre: Reprend la stabilisation.
 La colonne Presets, à droite du canvas, sont des presets.  
 
 Random: Initialise la configuration avec des nombres aléatoires entre 0 et 3.  
-Pile Centrée: Initialise la configuration avec uniquement des 0 et un nombre choisi par l'utilisateur dans le terminal au centre.  
+Pile Centrée: Initialise la configuration courante avec un nombre choisi par l'utilisateur dans le terminal au centre.  
 Max Stable: Initialise la configuration avec uniquement des 3.  
 Double Max Stable: Initialise la configuration avec uniquement des 6.  
 Identity: Initialise la configuration avec le preset Identity (Prend un peu de temps à charger selon la taille de la configuration).  

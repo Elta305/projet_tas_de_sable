@@ -17,6 +17,7 @@ import random as rd
 
 # Variables globales
 
+
 HAUTEUR = 800
 LARGEUR = 800
 N = 15
@@ -28,9 +29,10 @@ TEMPS_ATTENTE = 100
 PROPAGATION = 4
 INTERRUPTION = False
 
-########################
 
+####################
 # Fonctions
+
 
 def init_terrain():
     """ -> func
@@ -48,7 +50,11 @@ def init_terrain():
     SAUVEGARDE_TMP = grille
     return init_affichage(grille)
 
+
 def init_aleatoire():
+    """ -> func
+        Renvoie la fonction init_affichage avec une matrice remplie de nombres aléatoires entre 0 et 6 en paramètres
+    """
     global SAUVEGARDE_TMP, PROPAGATION
     grille = []
     nb = 6
@@ -64,7 +70,9 @@ def init_aleatoire():
     SAUVEGARDE_TMP = grille
     return init_affichage(grille)
 
+
 def init_affichage(grille):
+    """ Affiche la grille en paramètre dans un canvas tkinter """
     couleurs = ["green yellow", "green3", "green", "yellow", "goldenrod1", "orange2", "chocolate1", "red", "red3", "purple3"]
 
     global HAUTEUR, LARGEUR, N
@@ -86,11 +94,15 @@ def init_affichage(grille):
             if N < 50:
                 canvas.create_text(((j*largeur_case) + (largeur_case//2)), ((i*hauteur_case) + (hauteur_case // 2)), text=str(grille[i][j]))
 
+
 def sauvegarder_config():
+    """ Sauvegarde la configuration courante """
     global SAUVEGARDES, SAUVEGARDE_TMP
     SAUVEGARDES.append(SAUVEGARDE_TMP)
 
+
 def charger_config():
+    """ Charge la configuration choisie """
     global SAUVEGARDES, SAUVEGARDE_TMP
     num = int(input("Entrez le numéro de la sauvegarde à charger"))
     if len(SAUVEGARDES) < num:
@@ -98,7 +110,11 @@ def charger_config():
     SAUVEGARDE_TMP = SAUVEGARDES[num]
     return init_affichage(SAUVEGARDES[num])
 
+
 def addition():
+    """ -> func
+        Renvoie la fonction init_affichage avec tab1 une liste qui est l'addition entre la configuration courante et la sauvegarde choisie en paramètre
+    """
     global SAUVEGARDES, SAUVEGARDE_TMP
     num = int(input("Entrez le numéro de la sauvegarde à additionner avec cette configuration"))
     if len(SAUVEGARDES) < num:
@@ -116,7 +132,11 @@ def addition():
     SAUVEGARDE_TMP = tab1
     return init_affichage(tab1)
 
+
 def soustraction():
+    """ -> func
+        Renvoie la fonction init_affichage avec tab1 une liste qui est la soustraction entre la configuration courante et la sauvegarde choisie en paramètre
+    """
     global SAUVEGARDES, SAUVEGARDE_TMP
     num = int(input("Entrez le numéro de la sauvegarde à soustraire avec cette configuration"))
     if len(SAUVEGARDES) < num:
@@ -136,7 +156,9 @@ def soustraction():
     SAUVEGARDE_TMP = tab1
     return init_affichage(tab1)
 
+
 def stabilisation():
+    """ Stabilise le tas de sable jusqu'à que le tas ne puisse plus être stabilisé """
     global SAUVEGARDE_TMP, INTERRUPTION, TEMPS_ATTENTE, PROPAGATION
     tab = SAUVEGARDE_TMP
     continuer = False
@@ -189,34 +211,59 @@ def stabilisation():
     if INTERRUPTION is False:
         root.after(TEMPS_ATTENTE, stabilisation)
 
+
 def interruption():
+    """ Interrompt la stabilisation """
     global INTERRUPTION
     INTERRUPTION = True
 
+
 def reprendre():
+    """ -> func
+        Reprend la stabilisation
+    """
     global INTERRUPTION
     INTERRUPTION = False
-    stabilisation()
+    return stabilisation()
+
 
 # Presets
 
+
 def preset_random():
+    """ -> func
+        Renvoie la fonction init_affichage avec une matrice remplie de nombres entre 0 et 3 en paramètres
+    """
     global SAUVEGARDE_TMP
     grille = []
     for i in range(N-2):
         grille.append(['#'])
         for j in range(N-2):
-            grille[i].append(rd.randint(0, 3))
+            grille[i].append(rd.randint(0,3))
         grille[i].append('#')
     grille.insert(0, ['#'] * N)
     grille.append(['#'] * N)
     SAUVEGARDE_TMP = grille
     return init_affichage(grille)
 
+
 def preset_pilecentree():
-    pass
+    """ -> func
+        Renvoie la fonction init_affichage avec une matrice remplie de 0 sauf au centre ou la valeur est choisie par l'utilisateur
+    """
+    global SAUVEGARDE_TMP
+    grille = SAUVEGARDE_TMP
+    grille[N//2][N//2] = int(input("Entrez la valeur que vous voulez mettre au centre: "))
+    if grille[N//2][N//2] < 0:
+        return print("Vous ne pouvez pas mettre de nombres négatifs !")
+    SAUVEGARDE_TMP = grille
+    return init_affichage(grille)
+
 
 def preset_maxstable():
+    """ -> func
+        Renvoie la fonction init_affichage avec une matrice remplie de 3
+    """
     global SAUVEGARDE_TMP
     grille = []
     for i in range(N-2):
@@ -229,7 +276,11 @@ def preset_maxstable():
     SAUVEGARDE_TMP = grille
     return init_affichage(grille)
 
+
 def preset_doublemaxstable():
+    """ -> func
+        Renvoie la fonction init_affichage avec une matrice remplie de 6
+    """
     global SAUVEGARDE_TMP
     grille = []
     for i in range(N-2):
@@ -242,9 +293,14 @@ def preset_doublemaxstable():
     SAUVEGARDE_TMP = grille
     return init_affichage(grille)
 
-# Sous-fonctions des fonctions suivantes
+
+# Sous-fonctions des presets suivants
+
 
 def doublemax():
+    """ -> list
+        Renvoie une matrice remplie de 6
+    """
     grille = []
     for i in range(N-2):
         grille.append(['#'])
@@ -255,7 +311,9 @@ def doublemax():
     grille.append(['#'] * N)
     return grille
 
+
 def stab(tab):
+    """ Stabilise une fois la matrice """
     for i in range(len(tab)):
         for j in range(len(tab[i])):
             if isinstance(tab[i][j], int):
@@ -270,7 +328,9 @@ def stab(tab):
                         tab[i][j+1] += 1
                     tab[i][j] -= 4
 
+
 def soustract(grille, grille2):
+    """ Soustrait la matrice grille1 à la matrice grille2 """
     grille = grille[1:-1]
     grille2 = grille2[1:-1]
     for i in range(len(grille2)):
@@ -284,7 +344,11 @@ def soustract(grille, grille2):
     grille2.append(['#'] * N)
     return grille2
 
+
 def preset_identity():
+    """ -> func
+        Renvoie le preset Identity
+    """
     global SAUVEGARDE_TMP
     
     grille = doublemax()
@@ -305,6 +369,9 @@ def preset_identity():
 
 
 def preset_fleche():
+    """ -> func
+        Renvoie le preset Flèche
+    """
     global SAUVEGARDE_TMP
     
     grille = doublemax()
@@ -323,7 +390,11 @@ def preset_fleche():
     SAUVEGARDE_TMP = tab2
     return init_affichage(tab2)
 
+
 def preset_circuit_integre():
+    """ -> func
+        Renvoie le preset Circuit intégré
+    """
     global SAUVEGARDE_TMP
     
     grille = doublemax()
@@ -341,8 +412,12 @@ def preset_circuit_integre():
                 stab(tab2)
     SAUVEGARDE_TMP = tab2
     return init_affichage(tab2)
+
 
 def preset_megacorp():
+    """ -> func
+        Renvoie le preset Megacorp
+    """
     global SAUVEGARDE_TMP
     
     grille = doublemax()
@@ -360,8 +435,12 @@ def preset_megacorp():
                 stab(tab2)
     SAUVEGARDE_TMP = tab2
     return init_affichage(tab2)
+
 
 def preset_bastion():
+    """ -> func
+        Renvoie le preset Bastion
+    """
     global SAUVEGARDE_TMP
     
     grille = doublemax()
@@ -380,7 +459,11 @@ def preset_bastion():
     SAUVEGARDE_TMP = tab2
     return init_affichage(tab2)
 
+
 def preset_gemme():
+    """ -> func
+        Renvoie le preset Gemme
+    """
     global SAUVEGARDE_TMP
     
     grille = doublemax()
@@ -396,7 +479,11 @@ def preset_gemme():
     SAUVEGARDE_TMP = tab2
     return init_affichage(tab2)
 
+
 def preset_embleme():
+    """ -> func
+        Renvoie le preset Emblème
+    """
     global SAUVEGARDE_TMP
     
     grille = doublemax()
@@ -412,9 +499,14 @@ def preset_embleme():
     SAUVEGARDE_TMP = tab2
     return init_affichage(tab2)
 
+
 # Edition
-    
+
+
 def edition_taille():
+    """ -> func
+        Renvoie la fonction init_terrain avec la taille de tableau choisi
+    """
     global N
     tmp = N
     N = int(input("Choisissez une nouvelle taille de tableau: "))
@@ -423,20 +515,29 @@ def edition_taille():
         return print("Vous ne pouvez pas créer de matrice aussi petites !")
     return init_terrain()
 
+
 def edition_temps():
+    """ -> int
+        Renvoie le temps d'attente choisi en millisecondes
+    """
     global TEMPS_ATTENTE
     TEMPS_ATTENTE = int(input("Choisissez le temps d'attente entre chaque stabilisation en millisecondes: "))
     return TEMPS_ATTENTE
 
+
 def propagation4():
+    """ Change la propagation aux 4 cases adjacentes """
     global PROPAGATION
     PROPAGATION = 4
 
+
 def propagation8():
+    """ Change la propagation aux 8 cases adjacentes """
     global PROPAGATION
     PROPAGATION = 8
 
-########################
+
+#########################
 
 # Partie principale
 
